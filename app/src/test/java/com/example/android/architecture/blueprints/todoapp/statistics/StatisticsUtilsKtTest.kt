@@ -4,9 +4,9 @@ import com.example.android.architecture.blueprints.todoapp.data.Task
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 
+
 class StatisticsUtilsKtTest:DescribeSpec({
     describe("getActiveAndCompletedStats()"){
-
         context("완료된 작업이 없고, 활성 작업이 1개 이상 있을 때 "){
             val tasks = listOf<Task>(
                 Task("title", "todo", isCompleted = false),
@@ -40,3 +40,4 @@ class StatisticsUtilsKtTest:DescribeSpec({
         }
     }
 })
+

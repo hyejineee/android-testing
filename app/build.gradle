@@ -12,7 +12,9 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
     }
     buildTypes {
         release {
@@ -22,6 +24,8 @@ android {
     }
 
     testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+
         unitTests.includeAndroidResources = true
         unitTests.all {
             useJUnitPlatform()
@@ -75,6 +79,8 @@ dependencies {
     testImplementation 'androidx.test:runner:1.4.0'
     testImplementation 'androidx.test:core:1.4.0'
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
+    testImplementation 'io.kotest.extensions:kotest-extensions-robolectric:0.4.0'
+    androidTestUtil 'androidx.test:orchestrator:1.4.0'
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"

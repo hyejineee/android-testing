@@ -1,47 +1,59 @@
 package com.example.android.architecture.blueprints.todoapp.tasks
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import android.app.Application
 import androidx.lifecycle.Observer
 import androidx.test.core.app.ApplicationProvider
 import com.example.android.architecture.blueprints.todoapp.Event
+import com.example.android.architecture.blueprints.todoapp.InstantExecutorListener
+import com.example.android.architecture.blueprints.todoapp.TodoApplication
+import io.kotest.core.spec.Spec
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.core.test.TestCase
+import io.kotest.core.test.TestResult
+import io.kotest.extensions.robolectric.RobolectricTest
 import io.kotest.matchers.shouldNotBe
 import org.hamcrest.CoreMatchers.nullValue
-import org.junit.Before
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 
-@RunWith(RobolectricTestRunner::class)
-class TasksViewModelTest : DescribeSpec({
 
-    var instantExecutorRule = InstantTaskExecutorRule()
+@RobolectricTest
+class TasksViewModelTest : DescribeSpec() {
 
-    var tasksViewModel:TasksViewModel? = null
+    private var tasksViewModel: TasksViewModel? = null
+    private val observer = Observer<Event<Unit>> {}
 
-    val observer = Observer<Event<Unit>> {}
-
-    @Before
-    fun before(){
-        tasksViewModel = TasksViewModel(ApplicationProvider.getApplicationContext())
+    override fun beforeSpec(spec: Spec) {
+        super.beforeSpec(spec)
+        val application = ApplicationProvider.getApplicationContext<Application>()
+        tasksViewModel = TasksViewModel(application!!)
     }
 
-    afterEach {
+
+    override fun afterEach(testCase: TestCase, result: TestResult) {
+        super.afterEach(testCase, result)
         tasksViewModel?.newTaskEvent?.removeObserver(observer)
     }
 
+    init {
+        listener(InstantExecutorListener())
 
-    describe("addNewTask()"){
-        tasksViewModel?.newTaskEvent?.observeForever(observer)
+        describe("addNewTask()") {
+            tasksViewModel?.newTaskEvent?.observeForever(observer)
 
-        context("새로운 작업이 추가되었을 떄"){
-            tasksViewModel?.addNewTask()
+            println("describe")
 
-            it("새로운 작업 화면을 여는 작업이 실행된다."){
+            context("새로운 작업이 추가되었을 떄") {
+                tasksViewModel?.addNewTask()
 
-                val value = tasksViewModel?.newTaskEvent?.value
-                value?.getContentIfNotHandled() shouldNotBe nullValue()
+                println("context")
+                it("새로운 작업 화면을 여는 작업이 실행된다.") {
+
+                    println("it")
+                    val value = tasksViewModel?.newTaskEvent?.value
+                    value?.getContentIfNotHandled() shouldNotBe nullValue()
+                }
             }
         }
     }
-})
+}
+
+
